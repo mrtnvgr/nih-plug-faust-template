@@ -16,5 +16,5 @@
   "dsp_filename": "your_faust_dsp_filename_without_extension",
   "dsp_name": "{{ cookiecutter.dsp_filename|replace('_', ' ')|title }}",
   "dsp_version": "1.0",
-  "\nDone\nMake sure to change the CLAP features and VST3 categories in src/lib.rs": "press enter to finish"
+  "\nDone\nMake sure to change the CLAP features and VST3 categories in src/lib.rs\nDon't forget to install faust": "press enter to finish"
 }
