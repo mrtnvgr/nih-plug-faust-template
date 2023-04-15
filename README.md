@@ -2,13 +2,12 @@
 
 ## TODO
 
-- [x] fix "NotFound" faust compilation error
-- [x] process samples through dsp directly
-- [ ] params should be taken from generated dsp struct (?)
-- [ ] mono/stereo stuff (don't forget vst/clap features)
+- [x] process samples through DSP directly
+- [ ] sync params with DSP struct (?)
+- [ ] mono/stereo stuff (don't forget VST/clap features)
 - …
 - [ ] Start preparing for v0.1
-- [ ] Squash commits, remove TODO list
+- [ ] **Squash commits**, **remove TODO list**
 
 This template can be used with
 [cookiecutter](https://github.com/cookiecutter/cookiecutter) to create a new
