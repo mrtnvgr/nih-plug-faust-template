@@ -1,12 +1,17 @@
 use nih_plug::prelude::*;
 use std::sync::Arc;
 
+mod faust {
+    include!(concat!(env!("OUT_DIR"), "/dsp.rs"));
+}
+
 // This is a shortened version of the gain example with most comments removed, check out
 // https://github.com/robbert-vdh/nih-plug/blob/master/plugins/examples/gain/src/lib.rs to get
 // started
 
 struct {{ cookiecutter.struct_name }} {
     params: Arc<{{ cookiecutter.struct_name }}Params>,
+    dsp: faust::{{ cookiecutter.dsp_name }},
 }
 
 #[derive(Params)]
@@ -22,6 +27,7 @@ struct {{ cookiecutter.struct_name }}Params {
 impl Default for {{ cookiecutter.struct_name }} {
     fn default() -> Self {
         Self {
+            dsp: faust::{{ cookiecutter.dsp_name }}::new(),
             params: Arc::new({{ cookiecutter.struct_name }}Params::default()),
         }
     }
@@ -108,12 +114,14 @@ impl Plugin for {{ cookiecutter.struct_name }} {
         // Resize buffers and perform other potentially expensive initialization operations here.
         // The `reset()` function is always called right after this function. You can remove this
         // function if you do not need it.
+        self.dsp.init(_buffer_config.sample_rate as i32);
         true
     }
 
     fn reset(&mut self) {
         // Reset buffers and envelopes here. This can be called from the audio thread and may not
         // allocate. You can remove this function if you do not need it.
+        self.dsp.instance_reset_params();
     }
 
     fn process(
@@ -122,14 +130,9 @@ impl Plugin for {{ cookiecutter.struct_name }} {
         _aux: &mut AuxiliaryBuffers,
         _context: &mut impl ProcessContext<Self>,
     ) -> ProcessStatus {
-        for channel_samples in buffer.iter_samples() {
-            // Smoothing is optionally built into the parameters themselves
-            let gain = self.params.gain.smoothed.next();
-
-            for sample in channel_samples {
-                *sample *= gain;
-            }
-        }
+        let len = buffer.samples() as i32;
+        let inputs: &[&[f32]] = unsafe { std::mem::transmute(buffer.as_slice()) };
+        self.dsp.compute(len, inputs, buffer.as_slice());
 
         ProcessStatus::Normal
     }
