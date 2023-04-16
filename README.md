@@ -5,6 +5,7 @@
 - [x] process samples through DSP directly
 - [ ] sync params with DSP struct (?)
 - [ ] mono/stereo stuff (don't forget VST/clap features)
+- [ ] MIDI (?)
 - …
 - [ ] Start preparing for v0.1
 - [ ] **Squash commits**, **remove TODO list**
